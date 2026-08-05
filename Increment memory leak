@@ -1,0 +1,25 @@
+#include <stdlib.h>
+int* memLeak(int memory1, int memory2, int* returnSize) {
+  
+    *returnSize = 3;
+    
+    int* result = (int*)malloc(3 * sizeof(int));
+    
+    int i = 1; // Represents the current second and the amount of memory needed
+    
+    
+    while (memory1 >= i || memory2 >= i) {
+        if (memory1 >= memory2) {
+            memory1 -= i;
+        } else {
+            memory2 -= i;
+        }
+        i++; 
+    }
+    
+    result[0] = i;       
+    result[1] = memory1; 
+    result[2] = memory2; 
+    
+    return result;
+}

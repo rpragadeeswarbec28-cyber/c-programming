@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+char* sortSentence(char* s) {
+    char buckets[10][201];
+    
+    int present[10] = {0};
+    int wordCount = 0;
+
+    char* sCopy = strdup(s);
+    
+    char* token = strtok(sCopy, " ");
+    while (token != NULL) {
+        int len = strlen(token);
+        
+        int position = token[len - 1] - '0';
+        
+        token[len - 1] = '\0';
+        
+        strcpy(buckets[position], token);
+        present[position] = 1;
+        wordCount++;
+        
+        token = strtok(NULL, " ");
+    }
+    
+    free(sCopy);
+
+    char* result = (char*)malloc((strlen(s) + 1) * sizeof(char));
+    result[0] = '\0'; // Start with an empty string
+
+    int added = 0;
+    for (int i = 1; i <= 9; i++) {
+        if (present[i]) {
+            strcat(result, buckets[i]);
+            added++;
+            
+            if (added < wordCount) {
+                strcat(result, " ");
+            }
+        }
+    }
+
+    return result;
+}
+

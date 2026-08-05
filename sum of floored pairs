@@ -1,0 +1,49 @@
+#include <stdlib.h>
+
+#define MOD 1000000007
+
+int sumOfFlooredPairs(int* nums, int numsSize) {
+  
+    int max_val = 0;
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] > max_val) {
+            max_val = nums[i];
+        }
+    }
+
+    int* freq = (int*)calloc(max_val + 1, sizeof(int));
+    int* prefix = (int*)calloc(max_val + 1, sizeof(int));
+    
+    for (int i = 0; i < numsSize; i++) {
+        freq[nums[i]]++;
+    }
+    prefix[0] = freq[0];
+    for (int i = 1; i <= max_val; i++) {
+        prefix[i] = prefix[i - 1] + freq[i];
+    }
+
+    long long total_sum = 0;
+    for (int i = 1; i <= max_val; i++) {
+        if (freq[i] == 0) continue; 
+
+        for (int j = 1; i * j <= max_val; j++) {
+            int lower_bound = i * j - 1;
+            int upper_bound = i * (j + 1) - 1;
+            
+            if (upper_bound > max_val) {
+                upper_bound = max_val;
+            }
+
+            long long count_in_range = prefix[upper_bound] - prefix[lower_bound];
+
+            long long contribution = (long long)freq[i] * j * count_in_range;
+            total_sum = (total_sum + contribution) % MOD;
+        }
+    }
+
+    free(freq);
+    free(prefix);
+
+    return (int)total_sum;
+}
+

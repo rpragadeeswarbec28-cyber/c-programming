@@ -1,0 +1,54 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+bool isValidSegment(char* s, int start, int len) {
+    if (len > 3 || len == 0) return false;
+    if (len > 1 && s[start] == '0') return false;
+    
+    int val = 0;
+    for (int i = start; i < start + len; i++) {
+        val = val * 10 + (s[i] - '0');
+    }
+    return val <= 255;
+}
+
+void dfs(char* s, int sLen, int start, int segment, char* current, int currLen, char** result, int* returnSize) {
+    if (segment == 4) {
+        if (start == sLen) {
+            current[currLen - 1] = '\0';
+            result[*returnSize] = strdup(current);
+            (*returnSize)++;
+        }
+        return;
+    }
+    
+    for (int len = 1; len <= 3; len++) {
+        if (start + len > sLen) break;
+        
+        if (isValidSegment(s, start, len)) {
+            int oldLen = currLen;
+            for (int i = 0; i < len; i++) {
+                current[currLen++] = s[start + i];
+            }
+            current[currLen++] = '.';
+            
+            dfs(s, sLen, start + len, segment + 1, current, currLen, result, returnSize);
+            
+            currLen = oldLen;
+        }
+    }
+}
+
+char** restoreIpAddresses(char* s, int* returnSize) {
+    *returnSize = 0;
+    int sLen = strlen(s);
+    if (sLen < 4 || sLen > 12) return NULL;
+    
+    char** result = (char**)malloc(20 * sizeof(char*));
+    char current[20];
+    
+    dfs(s, sLen, 0, 0, current, 0, result, returnSize);
+    
+    return result;
+}

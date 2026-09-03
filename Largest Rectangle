@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1) return 0;
+
+    long long* h = (long long*)malloc(n * sizeof(long long));
+    for (int i = 0; i < n; i++) {
+        scanf("%lld", &h[i]);
+    }
+
+    int* stack = (int*)malloc((n + 1) * sizeof(int));
+    int top = -1;
+    long long max_area = 0;
+
+    int i = 0;
+    while (i < n) {
+        if (top == -1 || h[i] >= h[stack[top]]) {
+            stack[++top] = i;
+            i++;
+        } else {
+            int tp = stack[top--];
+            
+            long long width = (top == -1) ? i : (i - stack[top] - 1);
+            long long area = h[tp] * width;
+
+            if (area > max_area) {
+                max_area = area;
+            }
+        }
+    }
+
+    while (top != -1) {
+        int tp = stack[top--];
+        long long width = (top == -1) ? i : (i - stack[top] - 1);
+        long long area = h[tp] * width;
+
+        if (area > max_area) {
+            max_area = area;
+        }
+    }
+
+    printf("%lld\n", max_area);
+
+    free(h);
+    free(stack);
+
+    return 0;
+}

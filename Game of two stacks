@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void solve_game() {
+    int n, m;
+    long long max_sum;
+    if (scanf("%d %d %lld", &n, &m, &max_sum) != 3) return;
+
+    long long* a = (long long*)malloc(n * sizeof(long long));
+    long long* b = (long long*)malloc(m * sizeof(long long));
+
+    for (int i = 0; i < n; i++) {
+        scanf("%lld", &a[i]);
+    }
+    for (int i = 0; i < m; i++) {
+        scanf("%lld", &b[i]);
+    }
+
+    long long current_sum = 0;
+    int count_a = 0;
+    int count_b = 0;
+
+
+    while (count_a < n && current_sum + a[count_a] <= max_sum) {
+        current_sum += a[count_a];
+        count_a++;
+    }
+
+    int max_score = count_a;
+
+    
+    while (count_b < m) {
+        current_sum += b[count_b];
+        count_b++;
+
+        while (current_sum > max_sum && count_a > 0) {
+            count_a--;
+            current_sum -= a[count_a];
+        }
+
+        if (current_sum <= max_sum) {
+            int current_score = count_a + count_b;
+            if (current_score > max_score) {
+                max_score = current_score;
+            }
+        } else {
+            break;
+        }
+    }
+
+    printf("%d\n", max_score);
+
+    free(a);
+    free(b);
+}
+
+int main() {
+    int g;
+    if (scanf("%d", &g) != 1) return 0;
+
+    while (g--) {
+        solve_game();
+    }
+
+    return 0;
+}

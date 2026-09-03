@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int *data;
+    int top;
+    int capacity;
+} Stack;
+
+Stack* createStack(int capacity) {
+    Stack *stack = (Stack*)malloc(sizeof(Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->data = (int*)malloc(capacity * sizeof(int));
+    return stack;
+}
+
+void push(Stack *stack, int value) {
+    stack->data[++(stack->top)] = value;
+}
+
+int pop(Stack *stack) {
+    return stack->data[(stack->top)--];
+}
+
+int peek(Stack *stack) {
+    return stack->data[stack->top];
+}
+
+int isEmpty(Stack *stack) {
+    return stack->top == -1;
+}
+
+void shiftStacks(Stack *stackIn, Stack *stackOut) {
+    if (isEmpty(stackOut)) {
+        while (!isEmpty(stackIn)) {
+            push(stackOut, pop(stackIn));
+        }
+    }
+}
+
+int main() {
+    int q;
+    if (scanf("%d", &q) != 1) return 0;
+
+    Stack *stackIn = createStack(q);
+    Stack *stackOut = createStack(q);
+
+    for (int i = 0; i < q; i++) {
+        int type;
+        if (scanf("%d", &type) != 1) break;
+
+        if (type == 1) {
+            int x;
+            if (scanf("%d", &x) != 1) break;
+            push(stackIn, x);
+        } else if (type == 2) {
+            shiftStacks(stackIn, stackOut);
+            if (!isEmpty(stackOut)) {
+                pop(stackOut);
+            }
+        } else if (type == 3) {
+            shiftStacks(stackIn, stackOut);
+            if (!isEmpty(stackOut)) {
+                printf("%d\n", peek(stackOut));
+            }
+        }
+    }
+
+    free(stackIn->data);
+    free(stackIn);
+    free(stackOut->data);
+    free(stackOut);
+
+    return 0;
+}

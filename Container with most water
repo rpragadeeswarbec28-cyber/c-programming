@@ -1,0 +1,25 @@
+int maxArea(int* height, int heightSize) {
+    int left = 0;
+    int right = heightSize - 1;
+    int max_water = 0;
+    
+    while (left < right) {
+        int width = right - left;
+        int h1 = height[left];
+        int h2 = height[right];
+        int min_height = h1 < h2 ? h1 : h2;
+        int current_water = width * min_height;
+        
+        if (current_water > max_water) {
+            max_water = current_water;
+        }
+        
+        if (h1 < h2) {
+            left++;
+        } else {
+            right--;
+        }
+    }
+    
+    return max_water;
+}

@@ -1,0 +1,23 @@
+#include <stdlib.h>
+
+int compare(const void* a, const void* b) {
+    int* p1 = *(int**)a;
+    int* p2 = *(int**)b;
+    return (p1[0] - p1[1]) - (p2[0] - p2[1]);
+}
+
+int twoCitySchedCost(int** costs, int costsSize, int* costsColSize) {
+    qsort(costs, costsSize, sizeof(int*), compare);
+    
+    int totalCost = 0;
+    int n = costsSize / 2;
+    
+    for (int i = 0; i < n; i++) {
+        totalCost += costs[i][0];
+    }
+    for (int i = n; i < costsSize; i++) {
+        totalCost += costs[i][1];
+    }
+    
+    return totalCost;
+}

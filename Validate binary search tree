@@ -1,0 +1,16 @@
+#include <stdbool.h>
+#include <stddef.h>
+
+bool validate(struct TreeNode* node, long long min, long long max) {
+    if (node == NULL) {
+        return true;
+    }
+    if (node->val <= min || node->val >= max) {
+        return false;
+    }
+    return validate(node->left, min, node->val) && validate(node->right, node->val, max);
+}
+
+bool isValidBST(struct TreeNode* root) {
+    return validate(root, -2147483649LL, 2147483648LL);
+}
